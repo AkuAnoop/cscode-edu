@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="CSCODE EDU — sign up for a class">
+  <title>CSCODE EDU — Sign Up</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav container">
+      <a class="logo" href="index.html" aria-label="CSCODE EDU home">
+        <span class="logo-mark" aria-hidden="true">
+          <svg viewBox="0 0 44 44" fill="none">
+            <path d="M6 12.5 C5 7.5 9 4 15 3.5 C24 2.5 34 3 38.5 6 C41.5 8 41 15 41 22 C41 30 41.5 36 38 38.5 C34 41.5 22 41.5 13 40.5 C6.5 39.8 3.5 37 3.5 30 C3.5 24 4 18 6 12.5 Z"
+                  fill="url(#lg)" stroke="#3b0764" stroke-width="1.6" stroke-linejoin="round"/>
+            <path d="M29 15.5 C25 12 17.5 12.5 15.5 18 C13.5 23.5 15.5 30 21.5 30.5 C26 30.9 28.5 28.5 30 26"
+                  stroke="#ffffff" stroke-width="3.4" stroke-linecap="round" fill="none"/>
+            <defs>
+              <linearGradient id="lg" x1="4" y1="4" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#8b5cf6"/><stop offset="1" stop-color="#5b21b6"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </span>
+        <span class="logo-word">
+          CSCODE EDU
+          <svg class="logo-underline" viewBox="0 0 120 10" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M2 7 C24 2 46 9 68 4.5 C88 0.8 104 6 118 3" stroke="#7c3aed" stroke-width="2.6"
+                  fill="none" stroke-linecap="round"/>
+          </svg>
+        </span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="classes.html">Classes</a></li>
+        <li><a href="updates.html">Updates</a></li>
+        <li><a class="nav-cta active" href="enroll.html">Sign Up</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <canvas id="balls" class="page-balls" aria-hidden="true"></canvas>
+      <div class="container page-hero-inner">
+        <p class="eyebrow">Enrollment</p>
+        <h1>Sign up for a class</h1>
+        <p class="hero-text">Tell me which course you're interested in and I'll get back to you.</p>
+      </div>
+    </section>
+
+    <section class="form-section">
+      <div class="container form-wrap">
+        <!-- ─────────────────────────────────────────────────────────────────
+             Signups are emailed to the address in data-email below.
+             Powered by FormSubmit (formsubmit.co) — no account or API key.
+             IMPORTANT: the very first time someone submits this form,
+             FormSubmit sends a one-time confirmation email to that address.
+             Click the link in it once to activate. After that, every signup
+             arrives in the inbox automatically.
+        ────────────────────────────────────────────────────────────────── -->
+        <!-- Enrollment opens at local midnight on this date. Change it here. -->
+        <form id="signup-form" class="signup-form" novalidate
+              data-email="aku.anoop007@gmail.com"
+              data-opens="2027-06-01">
+
+          <div class="enroll-gate" id="enroll-gate" hidden>
+            <div class="gate-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+                <rect x="4" y="10.5" width="16" height="10" rx="2"/>
+                <path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/>
+              </svg>
+            </div>
+            <div class="gate-text">
+              <p class="gate-title" id="gate-title">Enrollment isn't open yet</p>
+              <p class="gate-sub" id="gate-sub"></p>
+            </div>
+          </div>
+
+
+          <input type="hidden" name="_subject" value="New CSCODE EDU class signup">
+          <input type="hidden" name="_template" value="table">
+          <input type="hidden" name="_captcha" value="false">
+          <!-- honeypot: bots fill this, humans don't -->
+          <input type="text" name="_honey" class="hp-field" tabindex="-1" autocomplete="off">
+
+          <div class="form-row">
+            <div class="field">
+              <label for="name">Full name <span class="req">*</span></label>
+              <input type="text" id="name" name="name" placeholder="Jane Doe" required autocomplete="name">
+              <p class="field-error" data-for="name"></p>
+            </div>
+            <div class="field">
+              <label for="email">Email <span class="req">*</span></label>
+              <input type="email" id="email" name="email" placeholder="jane@example.com" required autocomplete="email">
+              <p class="field-error" data-for="email"></p>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="field">
+              <label for="phone">Phone <span class="optional">optional</span></label>
+              <input type="tel" id="phone" name="phone" placeholder="(555) 123-4567" autocomplete="tel">
+              <p class="field-error" data-for="phone"></p>
+            </div>
+            <div class="field">
+              <label for="school">School <span class="optional">optional</span></label>
+              <input type="text" id="school" name="school" placeholder="Lincoln High School">
+              <p class="field-error" data-for="school"></p>
+            </div>
+          </div>
+
+          <div class="form-divider"><span>Academic info</span></div>
+
+          <div class="form-row form-row-3">
+            <div class="field">
+              <label for="grade_level">Grade level <span class="req">*</span></label>
+              <select id="grade_level" name="grade_level" required>
+                <option value="">Select…</option>
+                <option>6th grade</option>
+                <option>7th grade</option>
+                <option>8th grade</option>
+                <option>9th grade</option>
+                <option>10th grade</option>
+                <option>11th grade</option>
+                <option>12th grade</option>
+                <option>College</option>
+                <option>Adult learner</option>
+              </select>
+              <p class="field-error" data-for="grade_level"></p>
+            </div>
+            <div class="field">
+              <label for="grade_scale">Grade scale <span class="req">*</span></label>
+              <select id="grade_scale" name="grade_scale" required>
+                <option value="">Select…</option>
+                <option value="GPA (4.0 scale)">GPA (4.0 scale)</option>
+                <option value="Percentage (0-100)">Percentage (0–100)</option>
+                <option value="Letter grade">Letter grade</option>
+              </select>
+              <p class="field-error" data-for="grade_scale"></p>
+            </div>
+            <div class="field">
+              <label for="grade_average">Grade average <span class="req">*</span></label>
+              <input type="text" id="grade_average" name="grade_average" placeholder="3.8 / 92 / A-">
+              <p class="field-error" data-for="grade_average"></p>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="field">
+              <label for="course">Class you're interested in <span class="req">*</span></label>
+              <select id="course" name="course" required>
+                <option value="">Choose a class…</option>
+              </select>
+              <p class="field-error" data-for="course"></p>
+            </div>
+            <div class="field">
+              <label for="experience">Experience in this subject <span class="optional">optional</span></label>
+              <select id="experience" name="experience">
+                <option value="">Select…</option>
+                <option>Complete beginner</option>
+                <option>Some exposure</option>
+                <option>Comfortable, want to go deeper</option>
+                <option>Advanced</option>
+              </select>
+              <p class="field-error" data-for="experience"></p>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="goals">What do you want to get out of this class? <span class="optional">optional</span></label>
+            <textarea id="goals" name="goals" rows="3"
+                      placeholder="Raise my grade, prep for AP, build a project…"></textarea>
+          </div>
+
+          <div class="field">
+            <label for="message">Anything else I should know? <span class="optional">optional</span></label>
+            <textarea id="message" name="message" rows="4"
+                      placeholder="Schedule constraints, questions, accommodations…"></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-submit" id="submit-btn">
+            <span class="btn-label">Send my signup</span>
+            <span class="spinner" aria-hidden="true"></span>
+          </button>
+
+          <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
+        </form>
+
+        <aside class="form-aside">
+          <h2>What happens next</h2>
+          <ol class="steps">
+            <li><span class="step-num">1</span> You send this form.</li>
+            <li><span class="step-num">2</span> I get an email notification right away.</li>
+            <li><span class="step-num">3</span> I reply with schedule details and next steps.</li>
+          </ol>
+          <p class="aside-note">Your details are only used to contact you about classes.</p>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>© <span id="year"></span> CSCODE EDU. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
