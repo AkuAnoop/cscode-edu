@@ -1,0 +1,82 @@
+{
+  "term": "Summer 2027",
+  "classes": [
+    {
+      "code": "CS 101",
+      "name": "Introduction to Computer Science",
+      "category": "STEM",
+      "instructor": "Aku",
+      "description": "Fundamentals of programming, algorithms, and problem solving with hands-on projects.",
+      "schedule": "Mon / Wed · 10:00 AM",
+      "notes": "First week: setup dev environment and core concepts.",
+      "gradient": "purple",
+      "image": "images/class-code.svg"
+    },
+    {
+      "code": "CS 110",
+      "name": "Introduction to Java",
+      "category": "STEM",
+      "instructor": "Aku",
+      "description": "Object-oriented programming with classes, inheritance, and the Java standard library.",
+      "schedule": "Tue / Thu · 9:00 AM",
+      "notes": "Bring a laptop with the JDK installed.",
+      "gradient": "purple",
+      "image": "images/class-java.svg"
+    },
+    {
+      "code": "CS 120",
+      "name": "Introduction to Python",
+      "category": "STEM",
+      "instructor": "Aku",
+      "description": "Python syntax, data structures, and scripting for real-world automation tasks.",
+      "schedule": "Mon / Fri · 1:00 PM",
+      "notes": "",
+      "gradient": "purple",
+      "image": "images/class-python.svg"
+    },
+    {
+      "code": "CS 240",
+      "name": "AI with Python",
+      "category": "STEM",
+      "instructor": "Aku",
+      "description": "Machine learning foundations, neural networks, and building AI projects in Python.",
+      "schedule": "Wed · 3:00 PM",
+      "notes": "Prereq: Introduction to Python.",
+      "gradient": "purple",
+      "image": "images/class-ai.svg"
+    },
+    {
+      "code": "MATH 201",
+      "name": "Linear Algebra",
+      "category": "STEM",
+      "instructor": "Aku",
+      "description": "Vectors, matrices, eigenvalues, and applications in computing and data science.",
+      "schedule": "Tue / Thu · 1:00 PM",
+      "notes": "",
+      "gradient": "purple",
+      "image": "images/class-math.svg"
+    },
+    {
+      "code": "MATH 130",
+      "name": "Introduction to Geometry",
+      "category": "STEM",
+      "instructor": "Aku",
+      "description": "Shapes, proofs, transformations, and spatial reasoning from the ground up.",
+      "schedule": "Tue · 11:00 AM",
+      "notes": "",
+      "gradient": "purple",
+      "image": "images/class-geometry.svg"
+    },
+    {
+      "code": "ART 100",
+      "name": "Art",
+      "category": "Arts",
+      "instructor": "Aku",
+      "description": "Drawing, color, and composition — building visual instincts through studio practice.",
+      "schedule": "Fri · 2:00 PM",
+      "notes": "Sketchbook required.",
+      "gradient": "purple",
+      "image": "images/class-art.svg"
+    }
+  ]
+}

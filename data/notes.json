@@ -1,0 +1,575 @@
+{
+  "CS 101": {
+    "tagline": "Where the whole thing starts: telling a machine exactly what to do.",
+    "topics": [
+      {
+        "title": "What an algorithm actually is",
+        "body": "An algorithm is just a finite list of unambiguous steps that turns an input into an output. The hard part isn't writing steps — it's writing steps that leave no room for interpretation. A computer will happily do the wrong thing forever if you let it.",
+        "example": {
+          "label": "Finding the largest number in a list",
+          "lang": "text",
+          "code": "1. Assume the first item is the largest so far.\n2. Look at each remaining item in turn.\n3. If it is bigger than the largest so far, it becomes the largest so far.\n4. When no items remain, the largest so far is the answer."
+        },
+        "problems": [
+          {
+            "q": "Why does step 1 assume the first item rather than starting at zero?",
+            "a": "Because the list might contain only negative numbers. Starting at zero would return 0, which isn't in the list at all. Starting with a real element guarantees the answer is a real element."
+          },
+          {
+            "q": "How many comparisons does this make on a list of n items?",
+            "a": "n − 1. You compare every item except the first, which was used as the starting assumption."
+          }
+        ]
+      },
+      {
+        "title": "Variables and types",
+        "body": "A variable is a name pointing at a value. The type of that value decides what operations are legal. Most beginner bugs are type bugs in disguise — you thought you had a number and you actually had text that looks like a number.",
+        "example": {
+          "label": "The classic type trap",
+          "lang": "python",
+          "code": "age = input(\"How old are you? \")   # this is TEXT, not a number\nprint(age + 1)                     # TypeError!\n\nage = int(input(\"How old are you? \"))\nprint(age + 1)                     # works"
+        },
+        "problems": [
+          {
+            "q": "What does \"7\" + \"3\" produce in Python, and why?",
+            "a": "\"73\". Both operands are strings, so + means concatenation, not addition. With int(\"7\") + int(\"3\") you'd get 10."
+          },
+          {
+            "q": "Predict the output: x = 5; y = x; x = 9; print(y)",
+            "a": "5. y was assigned the value of x at that moment. Reassigning x later doesn't reach back and change y."
+          }
+        ]
+      },
+      {
+        "title": "Loops and off-by-one errors",
+        "body": "A loop repeats work while some condition holds. The single most common bug in all of programming is running one iteration too many or too few. Always ask: what is the first value? What is the last value? Is the last value included?",
+        "example": {
+          "label": "Inclusive vs exclusive bounds",
+          "lang": "python",
+          "code": "for i in range(5):\n    print(i)      # 0 1 2 3 4  — five numbers, stops BEFORE 5\n\nfor i in range(1, 6):\n    print(i)      # 1 2 3 4 5  — same count, different window"
+        },
+        "problems": [
+          {
+            "q": "You want to print the numbers 10 through 20 inclusive. What range call do you need?",
+            "a": "range(10, 21). The stop value is exclusive, so you have to go one past the number you actually want."
+          },
+          {
+            "q": "A loop runs while i < 10 starting at i = 0 and adding 2 each pass. How many times does the body run?",
+            "a": "5 times, with i equal to 0, 2, 4, 6, 8. At i = 10 the condition fails."
+          }
+        ]
+      },
+      {
+        "title": "Functions: naming a chunk of work",
+        "body": "A function packages steps behind a name so you can use it without rereading it. The test of a good function is whether you can describe what it does in one sentence with no 'and' in it. If you need an 'and', it's probably two functions.",
+        "example": {
+          "label": "Same logic, better shape",
+          "lang": "python",
+          "code": "def is_even(n):\n    return n % 2 == 0\n\ndef evens_in(numbers):\n    return [n for n in numbers if is_even(n)]\n\nprint(evens_in([1, 2, 3, 4, 5, 6]))   # [2, 4, 6]"
+        },
+        "problems": [
+          {
+            "q": "Why split is_even out instead of writing n % 2 == 0 directly inside evens_in?",
+            "a": "Readability and reuse. The name states the intent, and if the definition of 'even' ever needs to change, there's exactly one place to change it."
+          },
+          {
+            "q": "What does a function return if it has no return statement?",
+            "a": "None in Python. This bites people who write a function that prints a value and then try to use the result of calling it."
+          }
+        ]
+      }
+    ]
+  },
+
+  "CS 110": {
+    "tagline": "Java makes you say what you mean — out loud, in writing, with types.",
+    "topics": [
+      {
+        "title": "Classes and objects",
+        "body": "A class is a blueprint. An object is a thing built from that blueprint. The class describes what every instance will have (fields) and what it can do (methods); each object carries its own copy of the field values.",
+        "example": {
+          "label": "A class and two independent objects",
+          "lang": "java",
+          "code": "public class Dog {\n    private String name;\n    private int age;\n\n    public Dog(String name, int age) {\n        this.name = name;\n        this.age = age;\n    }\n\n    public String speak() {\n        return name + \" says woof\";\n    }\n}\n\nDog a = new Dog(\"Rex\", 3);\nDog b = new Dog(\"Momo\", 7);\nSystem.out.println(a.speak());   // Rex says woof"
+        },
+        "problems": [
+          {
+            "q": "What does the keyword this do in the constructor?",
+            "a": "It distinguishes the field from the parameter, which share a name. this.name is the object's field; plain name is the value passed in."
+          },
+          {
+            "q": "Why are the fields marked private?",
+            "a": "Encapsulation. Outside code can't reach in and set age to -40. Any rule about valid values can be enforced in one place, inside the class."
+          }
+        ]
+      },
+      {
+        "title": "Static types and why the compiler yells",
+        "body": "Java checks types before your program ever runs. That feels slower than Python at first, but the compiler is catching bugs at 9am that Python would have shown you at 2am in production. Read the error message; it usually names the exact line and the exact mismatch.",
+        "example": {
+          "label": "Caught before running",
+          "lang": "java",
+          "code": "int count = 5;\nString label = \"items\";\n\nint bad = label;        // error: incompatible types\nString ok = label + count;   // fine: \"items5\""
+        },
+        "problems": [
+          {
+            "q": "Why does String ok = label + count compile when int bad = label does not?",
+            "a": "Java defines + on a String as concatenation and will automatically convert the int to its text form. There's no automatic conversion in the other direction, from String to int."
+          },
+          {
+            "q": "What's the difference between int and Integer?",
+            "a": "int is a primitive holding a raw value; Integer is an object wrapper around one. Only Integer can be null or stored in collections like ArrayList."
+          }
+        ]
+      },
+      {
+        "title": "Inheritance and overriding",
+        "body": "A subclass gets everything its parent has and can replace specific behaviors. Use it when the child genuinely is a kind of the parent. If you're only inheriting to reuse a method, you probably wanted a helper class instead.",
+        "example": {
+          "label": "Overriding a parent method",
+          "lang": "java",
+          "code": "public class Animal {\n    public String speak() { return \"...\"; }\n}\n\npublic class Cat extends Animal {\n    @Override\n    public String speak() { return \"meow\"; }\n}\n\nAnimal thing = new Cat();\nSystem.out.println(thing.speak());   // meow"
+        },
+        "problems": [
+          {
+            "q": "The variable is declared as Animal. Why does it print \"meow\" and not \"...\"?",
+            "a": "Method calls are resolved at runtime based on the object's actual type, not the declared type. The object really is a Cat. This is polymorphism."
+          },
+          {
+            "q": "What does the @Override annotation buy you?",
+            "a": "The compiler verifies you're actually overriding something. Misspell the method name and you get an error instead of a silently unused method."
+          }
+        ]
+      },
+      {
+        "title": "ArrayList: arrays that grow",
+        "body": "A plain Java array has a fixed length forever. ArrayList wraps one and reallocates behind the scenes when it fills up, so you can add without knowing the size in advance.",
+        "example": {
+          "label": "Building a list as you go",
+          "lang": "java",
+          "code": "import java.util.ArrayList;\n\nArrayList<String> names = new ArrayList<>();\nnames.add(\"Ada\");\nnames.add(\"Alan\");\nnames.remove(0);\n\nSystem.out.println(names.size());    // 1\nSystem.out.println(names.get(0));    // Alan"
+        },
+        "problems": [
+          {
+            "q": "Why is ArrayList<String> written with angle brackets?",
+            "a": "Generics. It tells the compiler this list holds Strings, so it can reject names.add(42) and you don't have to cast on the way out."
+          },
+          {
+            "q": "What happens if you call names.get(5) on a list of size 1?",
+            "a": "An IndexOutOfBoundsException at runtime. Size is not capacity — valid indexes are 0 through size − 1."
+          }
+        ]
+      }
+    ]
+  },
+
+  "CS 120": {
+    "tagline": "Python gets out of your way. That's the point, and occasionally the problem.",
+    "topics": [
+      {
+        "title": "Lists and slicing",
+        "body": "Slicing takes a window out of a sequence using [start:stop:step]. Start is included, stop is not — the same rule as range. Negative indexes count backwards from the end.",
+        "example": {
+          "label": "Every slice you'll actually use",
+          "lang": "python",
+          "code": "nums = [10, 20, 30, 40, 50]\n\nnums[1:4]     # [20, 30, 40]\nnums[:2]      # [10, 20]\nnums[-2:]     # [40, 50]\nnums[::2]     # [10, 30, 50]\nnums[::-1]    # [50, 40, 30, 20, 10]  — reversed"
+        },
+        "problems": [
+          {
+            "q": "What does nums[2:2] return?",
+            "a": "An empty list, []. Start equals stop, so the window has zero width. This is why slicing rarely raises errors — out-of-range slices just come back short."
+          },
+          {
+            "q": "How would you get every third item starting from the second?",
+            "a": "nums[1::3] — start at index 1, run to the end, step 3."
+          }
+        ]
+      },
+      {
+        "title": "Dictionaries",
+        "body": "A dict maps keys to values with near-instant lookup regardless of size. Reach for one whenever you catch yourself keeping two parallel lists that have to stay in sync.",
+        "example": {
+          "label": "Counting things",
+          "lang": "python",
+          "code": "text = \"the cat the hat\"\ncounts = {}\n\nfor word in text.split():\n    counts[word] = counts.get(word, 0) + 1\n\nprint(counts)   # {'the': 2, 'cat': 1, 'hat': 1}"
+        },
+        "problems": [
+          {
+            "q": "Why use counts.get(word, 0) instead of counts[word]?",
+            "a": "The first time a word appears it isn't in the dict yet, so counts[word] raises KeyError. .get supplies a default of 0 instead."
+          },
+          {
+            "q": "Can a list be used as a dictionary key?",
+            "a": "No. Keys must be hashable, which means immutable. Use a tuple instead — (1, 2) works where [1, 2] doesn't."
+          }
+        ]
+      },
+      {
+        "title": "Comprehensions",
+        "body": "A comprehension builds a list in one expression. It's the idiomatic replacement for the append-in-a-loop pattern. Keep them to one filter and one transform — past that, a real loop reads better.",
+        "example": {
+          "label": "Loop vs comprehension",
+          "lang": "python",
+          "code": "# the long way\nsquares = []\nfor n in range(6):\n    if n % 2 == 0:\n        squares.append(n * n)\n\n# the Python way\nsquares = [n * n for n in range(6) if n % 2 == 0]\n# [0, 4, 16]"
+        },
+        "problems": [
+          {
+            "q": "Write a comprehension that lowercases every word in words longer than 3 letters.",
+            "a": "[w.lower() for w in words if len(w) > 3]"
+          },
+          {
+            "q": "What's the difference between [x for x in data] and (x for x in data)?",
+            "a": "Brackets build the whole list in memory immediately. Parentheses make a generator that produces values one at a time — much lighter for large data, but you can only walk it once."
+          }
+        ]
+      },
+      {
+        "title": "Reading and writing files",
+        "body": "Always open files with a with block. It closes the file for you even if an error is raised partway through, which is the kind of bug that only shows up once you're processing a thousand files.",
+        "example": {
+          "label": "Safe file handling",
+          "lang": "python",
+          "code": "with open(\"scores.txt\") as f:\n    lines = [line.strip() for line in f]\n\nwith open(\"out.txt\", \"w\") as f:\n    for line in lines:\n        f.write(line.upper() + \"\\n\")"
+        },
+        "problems": [
+          {
+            "q": "Why call .strip() on each line?",
+            "a": "Iterating a file keeps the trailing newline on every line. Without strip you get invisible \\n characters riding along into your data."
+          },
+          {
+            "q": "What's the danger of opening a file in \"w\" mode?",
+            "a": "It truncates the file to empty immediately, before you write anything. Use \"a\" to append instead if the existing contents matter."
+          }
+        ]
+      }
+    ]
+  },
+
+  "CS 240": {
+    "tagline": "Machine learning is mostly statistics wearing a hoodie. Respect the data more than the model.",
+    "topics": [
+      {
+        "title": "Train/test split — the discipline that matters most",
+        "body": "You must hold data back. A model evaluated on the same rows it learned from will look brilliant and be worthless. The held-out set is the only honest signal you get, so never tune against it repeatedly or it quietly stops being held out.",
+        "example": {
+          "label": "The split, before anything else",
+          "lang": "python",
+          "code": "from sklearn.model_selection import train_test_split\n\nX_train, X_test, y_train, y_test = train_test_split(\n    X, y, test_size=0.2, random_state=42\n)\n\nmodel.fit(X_train, y_train)\nprint(model.score(X_test, y_test))   # the number you can trust"
+        },
+        "problems": [
+          {
+            "q": "What does random_state=42 accomplish?",
+            "a": "It fixes the shuffle so the split is reproducible. Without it, every run gives different scores and you can't tell improvement from noise."
+          },
+          {
+            "q": "You get 99% on training data and 61% on test data. What's happening?",
+            "a": "Overfitting. The model memorized the training rows rather than learning a general pattern. Simplify the model, add regularization, or get more data."
+          }
+        ]
+      },
+      {
+        "title": "Linear regression from scratch",
+        "body": "Fitting a line means choosing a slope and intercept that minimize the sum of squared vertical distances to the points. Every fancier model is a variation on this idea: define an error, then move the parameters downhill.",
+        "example": {
+          "label": "Predicting from one feature",
+          "lang": "python",
+          "code": "from sklearn.linear_model import LinearRegression\nimport numpy as np\n\nX = np.array([[1], [2], [3], [4]])\ny = np.array([2, 4, 6, 8])\n\nmodel = LinearRegression().fit(X, y)\nprint(model.coef_)        # [2.]  — slope\nprint(model.intercept_)   # ~0.0\nprint(model.predict([[10]]))   # [20.]"
+        },
+        "problems": [
+          {
+            "q": "Why square the errors instead of taking absolute values?",
+            "a": "Squaring is differentiable everywhere, which makes the minimum solvable directly, and it punishes large misses much harder than small ones. The tradeoff is heavy sensitivity to outliers."
+          },
+          {
+            "q": "Your data curves upward. Can linear regression still fit it?",
+            "a": "Yes, if you add a squared feature. Regression is linear in its coefficients, not necessarily in your original variable — feeding it x² is completely fair game."
+          }
+        ]
+      },
+      {
+        "title": "Classification and the accuracy trap",
+        "body": "Accuracy is a bad metric on imbalanced data. If 99% of emails aren't spam, a model that says 'never spam' scores 99% and catches nothing. Look at precision and recall instead, and know which one your problem actually cares about.",
+        "example": {
+          "label": "Beyond a single number",
+          "lang": "python",
+          "code": "from sklearn.metrics import classification_report\n\npreds = model.predict(X_test)\nprint(classification_report(y_test, preds))\n\n# precision: of what I flagged, how much was right\n# recall:    of what was actually there, how much did I catch"
+        },
+        "problems": [
+          {
+            "q": "A cancer screening model — do you optimize precision or recall?",
+            "a": "Recall. Missing a real case is far more costly than a false alarm that gets ruled out by a follow-up test. You accept more false positives to catch more true ones."
+          },
+          {
+            "q": "What is a confusion matrix showing you that accuracy hides?",
+            "a": "Which direction the mistakes go — false positives versus false negatives — broken out per class, rather than collapsed into one average."
+          }
+        ]
+      },
+      {
+        "title": "Neural networks, honestly",
+        "body": "A neural network is layers of weighted sums with a nonlinearity between them. That nonlinearity is the whole trick: without it, stacking layers collapses back into a single linear function no matter how deep you go.",
+        "example": {
+          "label": "A tiny network",
+          "lang": "python",
+          "code": "from sklearn.neural_network import MLPClassifier\n\nnet = MLPClassifier(\n    hidden_layer_sizes=(16, 8),\n    activation=\"relu\",\n    max_iter=500\n)\nnet.fit(X_train, y_train)"
+        },
+        "problems": [
+          {
+            "q": "Why does removing the activation function ruin the network?",
+            "a": "A composition of linear maps is itself a linear map. Ten layers without nonlinearity has exactly the same expressive power as one — you've added cost and gained nothing."
+          },
+          {
+            "q": "What does ReLU do to negative inputs?",
+            "a": "Sets them to zero and passes positives through unchanged. Cheap to compute and it avoids the vanishing-gradient problem that plagued older activations."
+          }
+        ]
+      }
+    ]
+  },
+
+  "MATH 201": {
+    "tagline": "Linear algebra is the mathematics of doing many things at once.",
+    "topics": [
+      {
+        "title": "Vectors and the dot product",
+        "body": "The dot product multiplies matching components and adds the results. Geometrically it measures alignment: positive means the vectors point broadly the same way, zero means perpendicular, negative means opposed.",
+        "example": {
+          "label": "Both definitions agree",
+          "lang": "text",
+          "code": "u = (3, 4)   v = (2, -1)\n\nu · v = 3(2) + 4(-1) = 2\n\n|u| = √(9 + 16) = 5\n|v| = √(4 + 1)  = √5\n\ncos θ = 2 / (5√5) ≈ 0.179  →  θ ≈ 79.7°"
+        },
+        "problems": [
+          {
+            "q": "Find a nonzero vector perpendicular to (3, 4).",
+            "a": "(−4, 3) or any multiple. Check: 3(−4) + 4(3) = 0. In two dimensions, swap the components and negate one."
+          },
+          {
+            "q": "What does u · u equal?",
+            "a": "The squared length of u. For (3, 4) that's 9 + 16 = 25, so the length is 5."
+          }
+        ]
+      },
+      {
+        "title": "Matrix multiplication as composition",
+        "body": "A matrix is a function that transforms vectors. Multiplying two matrices means applying one transformation after the other. That's why AB ≠ BA in general — rotating then stretching isn't the same as stretching then rotating.",
+        "example": {
+          "label": "Row times column",
+          "lang": "text",
+          "code": "A = [1  2]     B = [0  1]\n    [3  4]         [1  0]\n\nAB = [1(0)+2(1)   1(1)+2(0)] = [2  1]\n     [3(0)+4(1)   3(1)+4(0)]   [4  3]\n\nBA = [3  4]     ←  not the same matrix\n     [1  2]"
+        },
+        "problems": [
+          {
+            "q": "What does B do to a vector, geometrically?",
+            "a": "It swaps the two components — a reflection across the line y = x. Applying it twice returns the original, so B² = I."
+          },
+          {
+            "q": "A is 2×3 and B is 3×5. What size is AB, and does BA exist?",
+            "a": "AB is 2×5. BA doesn't exist: B's 5 columns don't match A's 2 rows."
+          }
+        ]
+      },
+      {
+        "title": "Determinants and invertibility",
+        "body": "The determinant is the factor by which a transformation scales area (in 2D) or volume (in 3D). A determinant of zero means the transformation flattens space onto a lower dimension — information is destroyed, so it can't be undone.",
+        "example": {
+          "label": "2×2 determinant and inverse",
+          "lang": "text",
+          "code": "M = [a  b]     det M = ad − bc\n    [c  d]\n\nM = [4  7]     det = 4(6) − 7(2) = 10\n    [2  6]\n\nM⁻¹ = (1/10) [ 6  −7]\n              [−2   4]"
+        },
+        "problems": [
+          {
+            "q": "Why is a matrix with det = 0 not invertible?",
+            "a": "It collapses space — distinct input vectors get mapped to the same output. No function can undo that, because the inverse wouldn't know which input to return to."
+          },
+          {
+            "q": "What does a negative determinant tell you?",
+            "a": "The transformation flips orientation, like a reflection. The absolute value still gives the area scaling factor."
+          }
+        ]
+      },
+      {
+        "title": "Eigenvalues and eigenvectors",
+        "body": "An eigenvector is a direction the transformation doesn't rotate — it only stretches or shrinks it. The eigenvalue is that stretch factor. Find these and you've found the natural axes of the transformation.",
+        "example": {
+          "label": "Solving det(A − λI) = 0",
+          "lang": "text",
+          "code": "A = [2  1]\n    [1  2]\n\ndet([2−λ   1  ]) = (2−λ)² − 1 = 0\n   ([  1  2−λ])\n\nλ² − 4λ + 3 = 0  →  λ = 3, λ = 1\n\nλ = 3 → eigenvector (1, 1)\nλ = 1 → eigenvector (1, −1)"
+        },
+        "problems": [
+          {
+            "q": "Verify that (1, 1) is an eigenvector with eigenvalue 3.",
+            "a": "A(1,1) = (2·1 + 1·1, 1·1 + 2·1) = (3, 3) = 3(1, 1). The direction is unchanged and the length tripled."
+          },
+          {
+            "q": "What is the product of all eigenvalues equal to?",
+            "a": "The determinant. Here 3 × 1 = 3, and det A = 4 − 1 = 3. Their sum equals the trace, 2 + 2 = 4 = 3 + 1."
+          }
+        ]
+      }
+    ]
+  },
+
+  "MATH 130": {
+    "tagline": "Geometry is the class where you finally have to prove that what you see is true.",
+    "topics": [
+      {
+        "title": "Angle relationships",
+        "body": "When a transversal crosses two parallel lines, eight angles appear but only two distinct measures exist. Every angle is either equal to or supplementary with every other. Learn this and most beginning proofs become bookkeeping.",
+        "example": {
+          "label": "Naming the pairs",
+          "lang": "text",
+          "code": "Parallel lines cut by a transversal:\n\n  Vertical angles        →  equal\n  Corresponding angles   →  equal\n  Alternate interior     →  equal\n  Co-interior (same side)→  add to 180°\n\nIf one angle is 65°, every angle in the figure\nis either 65° or 115°."
+        },
+        "problems": [
+          {
+            "q": "Two co-interior angles measure (3x + 10)° and (2x + 20)°. Find x.",
+            "a": "They're supplementary: 3x + 10 + 2x + 20 = 180, so 5x + 30 = 180, giving x = 30. The angles are 100° and 80°."
+          },
+          {
+            "q": "Alternate interior angles are equal. Do the lines have to be parallel?",
+            "a": "Yes — and it works both ways. Equal alternate interior angles prove the lines are parallel, which is how many proofs establish parallelism."
+          }
+        ]
+      },
+      {
+        "title": "Triangle congruence",
+        "body": "Two triangles are congruent when there's a correspondence making all matching sides and angles equal. You never need all six — five shortcuts suffice, and knowing which combinations fail matters as much as knowing which work.",
+        "example": {
+          "label": "What counts and what doesn't",
+          "lang": "text",
+          "code": "WORKS:  SSS   SAS   ASA   AAS   HL (right triangles)\n\nFAILS:  SSA   — the ambiguous case, two triangles fit\n        AAA   — same shape, any size: similar, not congruent"
+        },
+        "problems": [
+          {
+            "q": "Why does AAA fail to prove congruence?",
+            "a": "Equal angles fix the shape but say nothing about scale. A 3-4-5 triangle and a 30-40-50 triangle have identical angles and wildly different sizes. AAA proves similarity only."
+          },
+          {
+            "q": "Why is HL allowed when SSA generally isn't?",
+            "a": "In a right triangle the hypotenuse and a leg determine the third side by the Pythagorean theorem, which quietly upgrades HL into SSS. The ambiguity disappears."
+          }
+        ]
+      },
+      {
+        "title": "The Pythagorean theorem, proved",
+        "body": "a² + b² = c² holds in every right triangle. The rearrangement proof is the one worth remembering: it needs no algebra beyond expanding a square, and it makes the result feel inevitable rather than memorized.",
+        "example": {
+          "label": "Proof by rearrangement",
+          "lang": "text",
+          "code": "Take a square of side (a + b).\n\nArrange four copies of the right triangle inside it.\nThe leftover space forms a square of side c.\n\n   (a + b)²  =  4 · (½ab)  +  c²\n   a² + 2ab + b²  =  2ab + c²\n   a² + b²  =  c²"
+        },
+        "problems": [
+          {
+            "q": "A triangle has sides 9, 12, and 15. Is it right-angled?",
+            "a": "Yes. 81 + 144 = 225 = 15². It's a 3-4-5 triangle scaled by 3."
+          },
+          {
+            "q": "Sides are 5, 6, and 8. Is the largest angle acute, right, or obtuse?",
+            "a": "Obtuse. 25 + 36 = 61, which is less than 64. When a² + b² < c² the angle opposite c exceeds 90°."
+          }
+        ]
+      },
+      {
+        "title": "Circle theorems",
+        "body": "Circles have a handful of relationships that turn hard-looking problems into one-liners. The inscribed angle theorem is the workhorse: any angle drawn from the circumference to a fixed arc is half the central angle on that same arc.",
+        "example": {
+          "label": "The theorems worth memorizing",
+          "lang": "text",
+          "code": "Inscribed angle  = ½ × central angle on the same arc\nAngle in a semicircle = 90°   (special case, central = 180°)\nOpposite angles of a cyclic quadrilateral add to 180°\nA tangent meets the radius at 90°\nTwo tangents from one external point are equal in length"
+        },
+        "problems": [
+          {
+            "q": "A central angle measures 130°. What is the inscribed angle on the same arc?",
+            "a": "65°. Half the central angle, and it's the same value from any point on the major arc."
+          },
+          {
+            "q": "In a cyclic quadrilateral one angle is 95°. What is the angle opposite it?",
+            "a": "85°, since opposite angles sum to 180°. The other pair can be anything that also sums to 180°."
+          }
+        ]
+      }
+    ]
+  },
+
+  "ART 100": {
+    "tagline": "Drawing isn't a talent you have. It's a way of looking that you practice.",
+    "topics": [
+      {
+        "title": "Value before color",
+        "body": "Value is how light or dark something is, and it does almost all the work of making a drawing read as solid. A piece with correct values and wrong colors still reads. Correct colors with flat values looks like a sticker.",
+        "example": {
+          "label": "The five-value study",
+          "lang": "text",
+          "code": "Squint at your subject until detail disappears.\nYou'll see four or five distinct value shapes:\n\n  1  highlight        — lightest, smallest area\n  2  light            — the lit plane\n  3  core shadow      — darkest part of the form shadow\n  4  reflected light  — bounce, always darker than any lit area\n  5  cast shadow      — sharpest near the object, softer further away\n\nBlock these in as flat shapes first. Blend last, or not at all."
+        },
+        "problems": [
+          {
+            "q": "Why is reflected light a common beginner mistake?",
+            "a": "People draw it too bright. Bounced light is always dimmer than direct light — if it's lighter than your lit plane, the form flattens out and the object stops looking three-dimensional."
+          },
+          {
+            "q": "What does squinting actually do?",
+            "a": "It cuts detail and compresses the value range, so you see large shapes and their relative darkness instead of texture. It's the fastest way to catch a value that's badly off."
+          }
+        ]
+      },
+      {
+        "title": "Color: hue, saturation, temperature",
+        "body": "Three dials, not one. Hue is which color, saturation is how intense, temperature is whether it leans warm or cool. Most muddy paintings come from adjusting hue when the real problem was saturation.",
+        "example": {
+          "label": "How to mute a color without mud",
+          "lang": "text",
+          "code": "To dull a color, add a little of its complement:\n\n  red    ←→  green\n  blue   ←→  orange\n  yellow ←→  purple\n\nAdding black instead kills saturation AND value\nat once, which is why black-mixed colors look dead.\n\nWarm light  →  cool shadows\nCool light  →  warm shadows"
+        },
+        "problems": [
+          {
+            "q": "Your painting looks muddy everywhere. What's the likely cause?",
+            "a": "Everything is mid-saturation. Mud is the absence of contrast, not the presence of a bad color — let some areas stay genuinely gray so the saturated passages can sing."
+          },
+          {
+            "q": "Sunlight is warm. What color should the shadows lean?",
+            "a": "Cool — usually blue-violet, picking up skylight. This warm/cool split does as much to sell realism as accurate value does."
+          }
+        ]
+      },
+      {
+        "title": "Composition and the eye's path",
+        "body": "Composition is deciding where the viewer looks and in what order. The rule of thirds is a starting heuristic, not a law. What actually matters is that you know where you want attention and you've used contrast to put it there.",
+        "example": {
+          "label": "Tools for directing attention",
+          "lang": "text",
+          "code": "The eye goes to, roughly in order of pull:\n\n  1  the sharpest value contrast\n  2  the most saturated color\n  3  the hardest edge\n  4  the most detail\n  5  faces, then implied lines pointing somewhere\n\nGive your focal point three of these.\nDeliberately deny them everywhere else."
+        },
+        "problems": [
+          {
+            "q": "Your focal point isn't reading. Everything is rendered equally. What do you do?",
+            "a": "Take away rather than add. Soften edges and lower contrast in the surrounding areas. A focal point is created by everything around it being quieter, not by the focal point being louder."
+          },
+          {
+            "q": "Why is dead-center placement usually weak?",
+            "a": "It splits the picture into equal halves, so there's no tension and nowhere for the eye to travel. Off-center placement creates unequal spaces that the eye has to move through — though centering works deliberately for symmetry and stillness."
+          }
+        ]
+      },
+      {
+        "title": "Gesture drawing",
+        "body": "Gesture captures the action and rhythm of a pose in 30 seconds, before you know any of the details. It feels like failure at first because nothing looks finished. That's correct — you're training observation speed, not producing work.",
+        "example": {
+          "label": "A 30-second gesture",
+          "lang": "text",
+          "code": "0-5s    Find the line of action — one sweeping curve\n        from head through the spine to the weight-bearing foot.\n\n5-15s   Rib cage and pelvis as two simple boxes,\n        tilted against each other.\n\n15-25s  Limbs as single flowing lines. No hands, no feet.\n\n25-30s  One dark accent where the weight sits.\n\nStop. Next pose."
+        },
+        "problems": [
+          {
+            "q": "Why start with the line of action instead of the head?",
+            "a": "Starting with the head means measuring everything else from it, and errors compound down the figure. The line of action captures the pose's energy first and keeps proportions subordinate to movement."
+          },
+          {
+            "q": "Your gestures look stiff. What's the usual fix?",
+            "a": "You're drawing outlines instead of movement. Exaggerate the curve of the spine more than you see — an exaggerated gesture reads as natural, while an accurate one often reads as stiff."
+          }
+        ]
+      }
+    ]
+  }
+}
