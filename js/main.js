@@ -24,6 +24,7 @@ function createClassCard(classInfo) {
   const card = document.createElement("article");
   card.className = "class-card";
   card.dataset.category = classInfo.category || "Other";
+  card.dataset.code = classInfo.code;
 
   const gradient = classInfo.gradient || "purple";
   const icon = icons[classInfo.category] || icons.default;
@@ -59,6 +60,10 @@ function createClassCard(classInfo) {
         </span>
       </div>
       ${notesHtml}
+      <p class="card-likes" hidden>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.7-9.6-9A5.4 5.4 0 0 1 12 6.6 5.4 5.4 0 0 1 21.6 12c-2.1 4.3-9.6 9-9.6 9z"/></svg>
+        <span class="card-like-count">0</span> likes
+      </p>
       <a class="class-enroll" href="notes.html?class=${encodeURIComponent(classInfo.code)}">View notes</a>
     </div>
   `;
@@ -83,6 +88,8 @@ function renderClasses() {
   filtered.forEach((classInfo) => {
     grid.appendChild(createClassCard(classInfo));
   });
+
+  attachCardLikeCounts();
 }
 
 function setupFilters() {
@@ -595,6 +602,8 @@ function initNotesPage() {
           <span class="notes-chip">${entry.topics.length} topics</span>`;
       }
 
+      initLikeButton(code);
+
       body.innerHTML = entry.topics.map(renderTopic).join("");
 
       if (toc) {
@@ -615,6 +624,125 @@ function initNotesPage() {
         "Could not load notes. Make sure the site is running through a local server."
       );
     });
+}
+
+/* ── Likes (real, persisted) ──────────────────────────────────────────
+   Backed by Abacus (abacus.jasoncameron.dev) — a free counter API with no
+   signup. Counts are stored on their server, so they persist across
+   visitors and devices. Change LIKE_NS if you ever want to reset to zero.
+
+   Caveat worth knowing: this is a public counter. Anyone who knows the URL
+   could bump it manually. Fine for a class site; not audited voting.
+─────────────────────────────────────────────────────────────────────── */
+
+const LIKE_API = "https://abacus.jasoncameron.dev";
+const LIKE_NS = "cscode-edu-akuanoop-v1";
+
+function likeKey(code) {
+  return "like-" + code.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+}
+
+function likedAlready(code) {
+  try {
+    return localStorage.getItem("csedu-liked-" + likeKey(code)) === "1";
+  } catch (e) {
+    return false;
+  }
+}
+
+function markLiked(code, on) {
+  try {
+    if (on) localStorage.setItem("csedu-liked-" + likeKey(code), "1");
+    else localStorage.removeItem("csedu-liked-" + likeKey(code));
+  } catch (e) {
+    /* private mode — counting still works, just no memory */
+  }
+}
+
+async function readLikes(code) {
+  const r = await fetch(`${LIKE_API}/get/${LIKE_NS}/${likeKey(code)}`, {
+    cache: "no-store",
+  });
+  // A class nobody has liked yet simply has no counter record — that's 0,
+  // not an error.
+  if (r.status === 404) return 0;
+  if (!r.ok) throw new Error("count unavailable");
+  return (await r.json()).value || 0;
+}
+
+async function addLike(code) {
+  const r = await fetch(`${LIKE_API}/hit/${LIKE_NS}/${likeKey(code)}`, {
+    cache: "no-store",
+  });
+  if (!r.ok) throw new Error("could not save like");
+  return (await r.json()).value || 0;
+}
+
+function initLikeButton(code) {
+  const mount = document.getElementById("like-mount");
+  if (!mount || !code) return;
+
+  const liked = likedAlready(code);
+
+  mount.innerHTML = `
+    <button class="like-btn${liked ? " liked" : ""}" type="button" id="like-btn"
+            aria-pressed="${liked}">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 21s-7.5-4.7-9.6-9A5.4 5.4 0 0 1 12 6.6 5.4 5.4 0 0 1 21.6 12c-2.1 4.3-9.6 9-9.6 9z"/>
+      </svg>
+      <span class="like-label">${liked ? "Liked" : "Like this class"}</span>
+      <span class="like-count" id="like-count">·</span>
+    </button>`;
+
+  const btn = document.getElementById("like-btn");
+  const countEl = document.getElementById("like-count");
+
+  readLikes(code)
+    .then((n) => (countEl.textContent = n))
+    .catch(() => (countEl.textContent = "–"));
+
+  btn.addEventListener("click", async () => {
+    if (btn.dataset.busy) return;
+
+    // Already liked → just un-highlight locally. The stored total only ever
+    // goes up, so we don't fake a decrement.
+    if (btn.classList.contains("liked")) {
+      btn.classList.remove("liked");
+      btn.setAttribute("aria-pressed", "false");
+      btn.querySelector(".like-label").textContent = "Like this class";
+      markLiked(code, false);
+      return;
+    }
+
+    btn.dataset.busy = "1";
+    try {
+      const n = await addLike(code);
+      countEl.textContent = n;
+      btn.classList.add("liked", "pop");
+      btn.setAttribute("aria-pressed", "true");
+      btn.querySelector(".like-label").textContent = "Liked";
+      markLiked(code, true);
+      setTimeout(() => btn.classList.remove("pop"), 400);
+    } catch (e) {
+      btn.querySelector(".like-label").textContent = "Couldn't save — retry";
+    } finally {
+      delete btn.dataset.busy;
+    }
+  });
+}
+
+function attachCardLikeCounts() {
+  document.querySelectorAll(".class-card[data-code]").forEach((card) => {
+    const code = card.dataset.code;
+    const el = card.querySelector(".card-like-count");
+    if (!el) return;
+    readLikes(code)
+      .then((n) => {
+        el.textContent = n;
+        el.closest(".card-likes").hidden = false;
+      })
+      .catch(() => {});
+  });
 }
 
 /* ── Live viewer counter ──────────────────────────────────────────────
