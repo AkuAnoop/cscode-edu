@@ -745,6 +745,63 @@ function attachCardLikeCounts() {
   });
 }
 
+/* ── Real page-view counting ──────────────────────────────────────────
+   Every page load bumps a counter for that page, using the same free
+   Abacus service as likes. Gives true cumulative view totals per page.
+
+   What it does NOT give you: unique visitors, a timeline of when views
+   happened, referrers, or devices. For that, set up GoatCounter (see the
+   commented block at the bottom of index.html).
+─────────────────────────────────────────────────────────────────────── */
+
+const VIEW_PAGES = {
+  "index.html": "Home",
+  "classes.html": "Classes",
+  "notes.html": "Class notes",
+  "updates.html": "Updates",
+  "enroll.html": "Sign Up",
+};
+
+function currentPageFile() {
+  const file = window.location.pathname.split("/").pop();
+  return !file || file === "" ? "index.html" : file;
+}
+
+function viewKey(file) {
+  return "view-" + file.replace(/\.html$/, "").replace(/[^a-z0-9]+/gi, "-");
+}
+
+function ownerOptedOut() {
+  try {
+    return localStorage.getItem("csedu-dont-count-me") === "1";
+  } catch (e) {
+    return false;
+  }
+}
+
+async function readViews(file) {
+  const r = await fetch(`${LIKE_API}/get/${LIKE_NS}/${viewKey(file)}`, {
+    cache: "no-store",
+  });
+  if (r.status === 404) return 0;
+  if (!r.ok) throw new Error("view count unavailable");
+  return (await r.json()).value || 0;
+}
+
+function countThisView() {
+  const file = currentPageFile();
+
+  // Don't count the private dashboard, and don't count the owner.
+  if (file === "stats.html" || ownerOptedOut()) return;
+  if (!VIEW_PAGES[file]) return;
+
+  fetch(`${LIKE_API}/hit/${LIKE_NS}/${viewKey(file)}`, {
+    cache: "no-store",
+  }).catch(() => {
+    /* counting is best-effort — never break the page over it */
+  });
+}
+
 /* ── Live viewer counter ──────────────────────────────────────────────
    NOTE: this number is simulated, not real analytics. It drifts around a
    believable baseline that rises in the evening. To remove it entirely,
@@ -784,8 +841,11 @@ function initViewerCount() {
     current = Math.max(2, current + pull * (Math.random() < 0.4 ? 1 : 0) + noise);
 
     numEl.textContent = current;
-    pill.querySelector(".viewer-text").childNodes[2].textContent =
-      current === 1 ? " person viewing right now" : " people viewing right now";
+    const tail = pill.querySelector(".viewer-text").lastChild;
+    if (tail && tail.nodeType === Node.TEXT_NODE) {
+      tail.textContent =
+        current === 1 ? " person viewing right now" : " people viewing right now";
+    }
 
     setTimeout(tick, 2500 + Math.random() * 4000);
   }
@@ -799,3 +859,4 @@ initBalls();
 initSignupForm();
 initNotesPage();
 initViewerCount();
+countThisView();
