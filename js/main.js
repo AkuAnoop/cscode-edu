@@ -722,6 +722,12 @@ function initLikeButton(code) {
       btn.setAttribute("aria-pressed", "true");
       btn.querySelector(".like-label").textContent = "Liked";
       markLiked(code, true);
+
+      // Also record it in the private analytics dashboard, so likes and
+      // views show up in one place with timestamps.
+      if (window.csAnalytics) {
+        window.csAnalytics.event(`like/${code}`, `Liked ${code}`);
+      }
       setTimeout(() => btn.classList.remove("pop"), 400);
     } catch (e) {
       btn.querySelector(".like-label").textContent = "Couldn't save — retry";
