@@ -59,12 +59,12 @@
 
         <div class="stats-summary">
           <div class="stat-card">
-            <p class="stat-num" id="total-likes">–</p>
-            <p class="stat-label">Total likes across all classes</p>
+            <p class="stat-num" id="total-views">–</p>
+            <p class="stat-label">Total page views</p>
           </div>
           <div class="stat-card">
-            <p class="stat-num" id="liked-classes">–</p>
-            <p class="stat-label">Classes with at least one like</p>
+            <p class="stat-num" id="total-likes">–</p>
+            <p class="stat-label">Total likes across all classes</p>
           </div>
           <div class="stat-card">
             <p class="stat-num" id="top-class">–</p>
@@ -73,8 +73,25 @@
         </div>
 
         <div class="stats-head">
-          <h2>Likes per class</h2>
+          <h2>Views per page</h2>
           <button class="btn btn-refresh" type="button" id="refresh-btn">Refresh</button>
+        </div>
+
+        <table class="stats-table">
+          <thead>
+            <tr>
+              <th>Page</th>
+              <th class="num">Views</th>
+            </tr>
+          </thead>
+          <tbody id="view-rows">
+            <tr><td colspan="2" class="stats-loading">Loading…</td></tr>
+          </tbody>
+        </table>
+
+        <div class="stats-head" style="margin-top:2.5rem">
+          <h2>Likes per class</h2>
+          <span class="stats-sub" id="liked-classes"></span>
         </div>
 
         <table class="stats-table">
@@ -92,6 +109,14 @@
 
         <p class="stats-updated" id="stats-updated"></p>
 
+        <div class="owner-toggle">
+          <label>
+            <input type="checkbox" id="dont-count-me">
+            Don't count my own visits from this browser
+          </label>
+          <span class="owner-hint" id="owner-hint"></span>
+        </div>
+
         <div class="stats-note">
           <h3>What this page does and doesn't know</h3>
           <ul>
@@ -100,12 +125,19 @@
               click, stored on a server and shared across everyone who visits.
             </li>
             <li>
-              <strong>Page views are not tracked yet.</strong> To see how many
-              people visit and which pages they read, sign up free at
+              <strong>Page views are real totals.</strong> Every load of a page
+              bumps its counter. This dashboard doesn't count itself, and you
+              can exclude your own browser with the checkbox above.
+            </li>
+            <li>
+              <strong>But views are only running totals.</strong> They can't tell
+              you <em>when</em> someone visited, whether two views were the same
+              person, where they came from, or what device they used. If you want
+              that, sign up free at
               <a href="https://www.goatcounter.com" target="_blank" rel="noopener">goatcounter.com</a>,
               then uncomment the analytics block at the bottom of
-              <code>index.html</code> and swap in your code. Your dashboard then
-              lives at <code>YOURCODE.goatcounter.com</code>.
+              <code>index.html</code> and swap in your code. That dashboard shows
+              visits over time, referrers, and devices.
             </li>
             <li>
               <strong>The "people viewing right now" pill is simulated.</strong>
