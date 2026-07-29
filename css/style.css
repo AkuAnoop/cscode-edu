@@ -1196,6 +1196,96 @@ a {
   text-align: right;
 }
 
+.stat-delta {
+  margin: 0.4rem 0 0;
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.stat-delta.up {
+  color: #047857;
+}
+
+.head-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.btn-quiet {
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+}
+
+.btn-quiet:hover {
+  background: #faf9ff;
+  color: #5b21b6;
+}
+
+.history-chart {
+  padding: 1rem 0.5rem 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: #fdfcff;
+}
+
+.hist-svg {
+  display: block;
+  width: 100%;
+  height: 160px;
+}
+
+.chart-axis {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.4rem 1.4rem 0.2rem;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.chart-empty {
+  margin: 0;
+  padding: 2rem 1.25rem;
+  text-align: center;
+  font-size: 0.88rem;
+  color: var(--text-muted);
+}
+
+.barcell {
+  width: 45%;
+  padding-right: 0 !important;
+}
+
+.bar {
+  display: block;
+  height: 8px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #a78bfa, #7c3aed);
+  min-width: 2px;
+}
+
+.pill {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.pill.ok {
+  background: #d1fae5;
+  color: #047857;
+}
+
+.pill.warn {
+  background: #fef3c7;
+  color: #92400e;
+}
+
 .stats-sub {
   font-size: 0.85rem;
   color: var(--text-muted);
